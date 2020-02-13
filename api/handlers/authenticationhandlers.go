@@ -5,11 +5,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"runtime"
 	"sync"
-	"time"
 
 	"github.com/labstack/echo"
 	"github.com/maei/authentication_go/models"
+	"github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -21,6 +22,7 @@ func UserRegistration(c echo.Context) error {
 		log.Print(err)
 	}
 
+	log.Print(runtime.NumGoroutine())
 	u := models.User{}
 
 	var wg sync.WaitGroup
@@ -30,11 +32,12 @@ func UserRegistration(c echo.Context) error {
 	if err != nil {
 		log.Print(err)
 	}
+	log.Print(runtime.NumGoroutine())
 
 	// create uuid
 	go func(u *models.User, wg *sync.WaitGroup){
 		defer wg.Done()
-		(*u).Uuid = "asdasd"
+		(*u).Uuid = uuid.NewV4()
 	}(&u, &wg)
 
 	// encrypt password
@@ -44,23 +47,21 @@ func UserRegistration(c echo.Context) error {
 		if err != nil{
 			log.Print(err)
 		}
-
 		(*u).Password = string(pass)
-		log.Print(u.Password)
 	}(&u, &wg)
+	log.Print(runtime.NumGoroutine())
 
 	wg.Wait()
-
-	// bs, err = json.Marshal(u)
-	// if err != nil {
-	// 	log.Print(err)
-	// }
-	// log.Printf(string(bs))
+	
+	// Write User to DB
+	go u.CreateUser()
+	log.Print(runtime.NumGoroutine())
 
 	return c.JSON(http.StatusOK, map[string]string{
 		"message": "user created",
 	})
 }
+
 
 func UserLogin(c echo.Context) error {
 	defer c.Request().Body.Close()
