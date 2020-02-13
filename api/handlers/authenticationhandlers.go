@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/maei/authentication_go/models"
 	"github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -33,7 +33,8 @@ func UserRegistration(c echo.Context) error {
 	// create uuid
 	go func(u *models.User, wg *sync.WaitGroup) {
 		defer wg.Done()
-		(*u).Uuid = uuid.NewV4()
+		uuid := uuid.NewV4()
+		(*u).Uuid = uuid.String()
 	}(&u, &wg)
 
 	// encrypt password
@@ -76,8 +77,13 @@ func UserLogin(c echo.Context) error {
 		})
 	}
 
+	// create a JWT with uuid and JWT-Standardclaims
+	refresh_token, access_token := models.CreateToken(u.Uuid)
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"user":  u,
-		"token": "token",
+		"access_token": access_token,
+		"refresh_token": refresh_token,
 	})
 }
+

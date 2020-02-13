@@ -1,7 +1,7 @@
 package groups
 
 import (
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/maei/authentication_go/api/handlers"
 )
 

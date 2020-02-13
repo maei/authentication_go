@@ -3,17 +3,15 @@ package models
 import (
 	"encoding/json"
 	"log"
-
-	"github.com/satori/go.uuid"
 )
 
 type User struct {
-	Firstname string    `json:"firstName"`
-	Lastname  string    `json:"lastName"`
-	Email     string    `json:"email"`
-	Password  string    `json:"password"`
-	Uuid      uuid.UUID `json:"userId"`
-	Address   Address   `json:"address"`
+	Firstname string `json:"firstName"`
+	Lastname  string `json:"lastName"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	Uuid      string `json:"userId"`
+	Address Address `json:"address"`
 }
 
 type Address struct {
