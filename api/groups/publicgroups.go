@@ -7,6 +7,6 @@ import (
 
 func PublicGroups(c *echo.Echo){
 	c.POST("/register", handlers.UserRegistration)
-	c.POST("/login", handlers.UserRegistration)
+	c.POST("/login", handlers.UserLogin)
 
 }

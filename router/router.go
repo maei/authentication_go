@@ -7,7 +7,7 @@ import (
 
 func NewRouter() *echo.Echo {
 	e := echo.New()
-	// set Groups
+
 	jwtGroups := e.Group("/api/auth")
 
 	groups.PublicGroups(e)
