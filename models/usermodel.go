@@ -5,6 +5,7 @@ type User struct {
 	Lastname  string  `json:"lastName"`
 	Email     string  `json:"email"`
 	Password  string  `json:"password"`
+	Uuid      string  `json:"userId"`
 	Address   Address `json:"address"`
 }
 

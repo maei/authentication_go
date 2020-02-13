@@ -6,9 +6,6 @@ import (
 	"github.com/labstack/echo"
 )
 
-type User struct{
-	Name string `json:"name"`
-}
 
 func GetUser(c echo.Context) error{
 	// u1:=User{"Matthias"}

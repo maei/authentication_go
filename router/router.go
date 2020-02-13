@@ -12,6 +12,6 @@ func NewRouter() *echo.Echo {
 
 	groups.PublicGroups(e)
 	groups.JwtGroups(jwtGroups)
-	
+
 	return e
 }
