@@ -1,13 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"github.com/maei/authentication_go/api/handlers"
+	"log"
+
+	"github.com/maei/authentication_go/router"
 )
 
-func main() {
-	fmt.Println("Hello World")
-	user := handlers.GetUser()
-	fmt.Println(user.Name)
 
+func main() {
+	log.Print("Server Started...")
+	e := router.NewRouter()
+
+
+
+
+	e.Start(":8088")
 }
