@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -20,15 +19,11 @@ func UserRegistration(c echo.Context) error {
 		log.Print(err)
 	}
 
-	u := models.User{}
-
 	var wg sync.WaitGroup
 	wg.Add(2)
 
-	err = json.Unmarshal(bs, &u)
-	if err != nil {
-		log.Print(err)
-	}
+	// cast empty User
+	u := models.ToUser(bs)
 
 	// create uuid
 	go func(u *models.User, wg *sync.WaitGroup) {
@@ -64,12 +59,9 @@ func UserLogin(c echo.Context) error {
 	if err != nil {
 		log.Print(err)
 	}
-
-	u := models.User{}
-	err = json.Unmarshal(bs, &u)
-	if err != nil {
-		log.Print(err)
-	}
+	
+	// cast empty User
+	u := models.ToUser(bs)
 
 	if u.Password != "urlaub" {
 		return c.JSON(http.StatusUnauthorized, map[string]string{
@@ -78,12 +70,13 @@ func UserLogin(c echo.Context) error {
 	}
 
 	// create a JWT with uuid and JWT-Standardclaims
-	refresh_token, access_token := models.CreateToken(u.Uuid)
+	access_token, err := models.CreateToken(u.Uuid)
+	if err != nil {
+		log.Print(err)
+	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"user":  u,
+		"user":         u,
 		"access_token": access_token,
-		"refresh_token": refresh_token,
 	})
 }
-

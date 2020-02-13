@@ -6,12 +6,12 @@ import (
 )
 
 type User struct {
-	Firstname string `json:"firstName"`
-	Lastname  string `json:"lastName"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	Uuid      string `json:"userId"`
-	Address Address `json:"address"`
+	Firstname string  `json:"firstName"`
+	Lastname  string  `json:"lastName"`
+	Email     string  `json:"email"`
+	Password  string  `json:"password"`
+	Uuid      string  `json:"userId"`
+	Address   Address `json:"address"`
 }
 
 type Address struct {
@@ -28,4 +28,15 @@ func (u *User) CreateUser() {
 		log.Print(err)
 	}
 	log.Printf(string(bs))
+}
+
+func ToUser(bs []byte) User {
+	u := User{}
+
+	err := json.Unmarshal(bs, &u)
+	if err != nil {
+		log.Print(err)
+	}
+
+	return u
 }
