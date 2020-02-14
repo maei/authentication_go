@@ -14,6 +14,7 @@ import (
 
 func UserRegistration(c echo.Context) error {
 	defer c.Request().Body.Close()
+
 	bs, err := ioutil.ReadAll(c.Request().Body)
 	if err != nil {
 		log.Print(err)
@@ -24,15 +25,18 @@ func UserRegistration(c echo.Context) error {
 
 	// cast empty User
 	u := models.ToUser(bs)
+	// log.Printf("%p", u)
 
 	// create uuid
+	// new goroutine
 	go func(u *models.User, wg *sync.WaitGroup) {
 		defer wg.Done()
 		uuid := uuid.NewV4()
 		(*u).Uuid = uuid.String()
-	}(&u, &wg)
+	}(u, &wg)
 
 	// encrypt password
+	// new goroutine
 	go func(u *models.User, wg *sync.WaitGroup) {
 		defer wg.Done()
 		pass, err := bcrypt.GenerateFromPassword([]byte((*u).Password), bcrypt.DefaultCost)
@@ -40,7 +44,7 @@ func UserRegistration(c echo.Context) error {
 			log.Print(err)
 		}
 		(*u).Password = string(pass)
-	}(&u, &wg)
+	}(u, &wg)
 
 	wg.Wait()
 
@@ -59,7 +63,7 @@ func UserLogin(c echo.Context) error {
 	if err != nil {
 		log.Print(err)
 	}
-	
+
 	// cast empty User
 	u := models.ToUser(bs)
 

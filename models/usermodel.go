@@ -30,7 +30,7 @@ func (u *User) CreateUser() {
 	log.Printf(string(bs))
 }
 
-func ToUser(bs []byte) User {
+func ToUser(bs []byte) *User {
 	u := User{}
 
 	err := json.Unmarshal(bs, &u)
@@ -38,5 +38,5 @@ func ToUser(bs []byte) User {
 		log.Print(err)
 	}
 
-	return u
+	return &u
 }

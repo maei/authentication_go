@@ -5,7 +5,7 @@ import (
 	"github.com/maei/authentication_go/api/handlers"
 )
 
-func PublicGroups(c *echo.Echo){
+func PublicGroups(c *echo.Echo) {
 	c.POST("/register", handlers.UserRegistration)
 	c.POST("/login", handlers.UserLogin)
 
